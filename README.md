@@ -1,4 +1,4 @@
-# pomo — Lock In From Your Terminal 👾
+# 🍅 pomo — Lock In From Your Terminal
 
 Start structured work sessions, block distractions, and stay locked in — right from your CLI. No fluff, no fancy UI stuff.
 
