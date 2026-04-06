@@ -3,13 +3,19 @@ package audio
 import (
 	"bytes"
 	"fmt"
-	"io"
 	"time"
 
 	"github.com/gopxl/beep"
 	"github.com/gopxl/beep/speaker"
 	"github.com/gopxl/beep/wav"
 )
+
+// readSeekCloser wraps a *bytes.Reader and adds a no-op Close so it satisfies
+// io.ReadSeekCloser. Unlike io.NopCloser, it preserves the Seek method that
+// the WAV decoder needs when beep.Loop rewinds the stream.
+type readSeekCloser struct{ *bytes.Reader }
+
+func (readSeekCloser) Close() error { return nil }
 
 // Player manages looping ambient audio playback for a session.
 type Player struct{}
@@ -28,7 +34,7 @@ func (p *Player) PlayLoop(path string) error {
 		return err
 	}
 
-	streamer, format, err := wav.Decode(io.NopCloser(bytes.NewReader(data)))
+	streamer, format, err := wav.Decode(readSeekCloser{bytes.NewReader(data)})
 	if err != nil {
 		return fmt.Errorf("audio: decode %q: %w", path, err)
 	}
