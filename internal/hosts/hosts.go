@@ -14,8 +14,8 @@ const (
 	redirectIP = "127.0.0.1"
 )
 
-// Block adds pomo-managed entries for each site to the hosts file.
-// It first removes any leftover pomo block from a previous interrupted run.
+// add pomo-managed entries for each site to the hosts file
+// first removes any leftover pomo block from a previous interrupted run
 func Block(sites []string) error {
 	content, err := os.ReadFile(hostsFile)
 	if err != nil {
@@ -32,7 +32,7 @@ func Block(sites []string) error {
 			continue
 		}
 		block.WriteString(fmt.Sprintf("%s %s\n", redirectIP, site))
-		// Also block the www. variant unless it was already specified
+		// also block the www. variant unless it was already specified
 		if !strings.HasPrefix(site, "www.") {
 			block.WriteString(fmt.Sprintf("%s www.%s\n", redirectIP, site))
 		}
@@ -47,7 +47,6 @@ func Block(sites []string) error {
 	return nil
 }
 
-// Unblock removes all pomo-managed entries from the hosts file.
 func Unblock() error {
 	content, err := os.ReadFile(hostsFile)
 	if err != nil {
@@ -64,7 +63,6 @@ func Unblock() error {
 	return nil
 }
 
-// removeBlock strips the pomo-managed block from hosts content.
 func removeBlock(content string) string {
 	lines := strings.Split(content, "\n")
 	var out []string
@@ -84,8 +82,6 @@ func removeBlock(content string) string {
 			out = append(out, line)
 		}
 	}
-
-	// Strip trailing blank lines, preserve one trailing newline
 	for len(out) > 0 && strings.TrimSpace(out[len(out)-1]) == "" {
 		out = out[:len(out)-1]
 	}
@@ -93,7 +89,7 @@ func removeBlock(content string) string {
 	return strings.Join(out, "\n") + "\n"
 }
 
-// flushDNS attempts to flush the system DNS cache on macOS (best-effort).
+// flushDNS attempts to flush the system DNS cache on macOS
 func flushDNS() {
 	_ = exec.Command("dscacheutil", "-flushcache").Run()
 	_ = exec.Command("killall", "-HUP", "mDNSResponder").Run()

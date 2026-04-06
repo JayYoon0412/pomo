@@ -10,11 +10,9 @@ import (
 
 var soundMap = map[string]string{
 	"fire": "sounds/fireplace.wav",
-	"rain": "sounds/lofi_rain.wav",
+	"rain": "sounds/rain_lofi.wav",
 }
 
-// ResolveSound validates name and returns the embedded FS path for it.
-// Returns a formatted error listing all available sounds if name is unknown.
 func ResolveSound(name string) (string, error) {
 	if _, ok := soundMap[name]; !ok {
 		names := make([]string, 0, len(soundMap))
@@ -27,7 +25,6 @@ func ResolveSound(name string) (string, error) {
 	return soundMap[name], nil
 }
 
-// soundData reads and returns the raw bytes for the given embedded FS path.
 func soundData(path string) ([]byte, error) {
 	data, err := assets.SoundsFS.ReadFile(path)
 	if err != nil {

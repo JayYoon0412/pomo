@@ -37,8 +37,8 @@ func NewDisplay() *Display {
 }
 
 // Render draws (or redraws) the timer display in place.
-func (d *Display) Render(phase Phase, remaining, total time.Duration, blocked []string, sound string) {
-	lines := d.buildLines(phase, remaining, total, blocked, sound)
+func (d *Display) Render(phase Phase, remaining, total time.Duration, blocked []string, sound string, sessionNum int) {
+	lines := d.buildLines(phase, remaining, total, blocked, sound, sessionNum)
 
 	// Move cursor back to the top of the previous render
 	if d.prevLines > 0 {
@@ -59,10 +59,13 @@ func (d *Display) PrintMessage(msg string) {
 	fmt.Println(msg)
 }
 
-func (d *Display) buildLines(phase Phase, remaining, total time.Duration, blocked []string, sound string) []string {
+func (d *Display) buildLines(phase Phase, remaining, total time.Duration, blocked []string, sound string, sessionNum int) []string {
 	var lines []string
 
 	lines = append(lines, "") // top padding
+
+	// Session indicator
+	lines = append(lines, fmt.Sprintf("  %sSession %d / 4%s", ansiDim, sessionNum, ansiReset))
 
 	// Phase header
 	if phase == PhaseFocus {
@@ -93,6 +96,7 @@ func (d *Display) buildLines(phase Phase, remaining, total time.Duration, blocke
 
 	// Ambient sound (only shown during focus)
 	if sound != "" && phase == PhaseFocus {
+		lines = append(lines, "")
 		lines = append(lines, fmt.Sprintf("  %s🎵 %s%s", ansiDim, sound, ansiReset))
 	}
 

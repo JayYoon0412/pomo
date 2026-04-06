@@ -90,9 +90,9 @@ To manually remove pomo's entries at any time, delete the lines between and incl
 
 The `--sound` flag plays a looping audio track for the duration of your focus session. Sound stops automatically when the focus phase ends and is cleaned up immediately on `Ctrl+C`.
 
-| Name   | Description       |
-| ------ | ----------------- |
+| Name   | Description         |
+| ------ | ------------------- |
 | `fire` | Crackling fireplace |
-| `rain` | Lo-fi rain        |
+| `rain` | Lo-fi rain          |
 
 Sounds are embedded directly in the binary — no extra files needed after installation.
