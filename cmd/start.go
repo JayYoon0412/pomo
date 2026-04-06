@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/JayYoon0412/pomo/internal/audio"
 	"github.com/JayYoon0412/pomo/internal/session"
 )
 
@@ -13,6 +14,7 @@ var (
 	focusMins  int
 	breakMins  int
 	blockSites []string
+	soundName  string
 )
 
 var startCmd = &cobra.Command{
@@ -25,6 +27,7 @@ func init() {
 	startCmd.Flags().IntVar(&focusMins, "focus", 25, "Focus duration in minutes")
 	startCmd.Flags().IntVar(&breakMins, "break", 5, "Break duration in minutes")
 	startCmd.Flags().StringSliceVar(&blockSites, "block", nil, "Comma-separated websites to block during focus (e.g. youtube.com,twitter.com)")
+	startCmd.Flags().StringVar(&soundName, "sound", "", "Ambient sound to play during focus (fire, rain)")
 }
 
 func runStart(cmd *cobra.Command, args []string) error {
@@ -35,10 +38,20 @@ func runStart(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("--break must be greater than 0, got %d", breakMins)
 	}
 
+	var soundPath string
+	if soundName != "" {
+		var err error
+		soundPath, err = audio.ResolveSound(soundName)
+		if err != nil {
+			return err
+		}
+	}
+
 	cfg := session.Config{
 		FocusMins:  focusMins,
 		BreakMins:  breakMins,
 		BlockSites: blockSites,
+		SoundPath:  soundPath,
 	}
 
 	if err := session.Run(cfg); err != nil {

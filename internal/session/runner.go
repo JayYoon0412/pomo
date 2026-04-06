@@ -7,6 +7,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/JayYoon0412/pomo/internal/audio"
 	"github.com/JayYoon0412/pomo/internal/hosts"
 	"github.com/JayYoon0412/pomo/internal/ui"
 )
@@ -16,6 +17,7 @@ type Config struct {
 	FocusMins  int
 	BreakMins  int
 	BlockSites []string
+	SoundPath  string
 }
 
 // Run executes a full Pomodoro session: focus phase followed by break phase.
@@ -24,8 +26,13 @@ func Run(cfg Config) error {
 	signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM)
 
 	sitesBlocked := false
+	var player *audio.Player
 
 	cleanup := func() {
+		if player != nil {
+			player.Stop()
+			player = nil
+		}
 		if sitesBlocked {
 			if err := hosts.Unblock(); err != nil {
 				fmt.Fprintf(os.Stderr, "\nwarning: failed to restore /etc/hosts: %v\n", err)
@@ -42,6 +49,14 @@ func Run(cfg Config) error {
 		sitesBlocked = true
 	}
 
+	// Start ambient sound for the focus phase
+	if cfg.SoundPath != "" {
+		player = audio.NewPlayer()
+		if err := player.PlayLoop(cfg.SoundPath); err != nil {
+			return err
+		}
+	}
+
 	disp := ui.NewDisplay()
 	focusDur := time.Duration(cfg.FocusMins) * time.Minute
 
@@ -49,7 +64,7 @@ func Run(cfg Config) error {
 		return nil
 	}
 
-	// Unblock sites before break begins
+	// Stop sound and unblock sites before break begins
 	cleanup()
 
 	disp.PrintMessage("  Focus complete — starting break...")
