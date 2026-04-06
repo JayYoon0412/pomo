@@ -21,19 +21,19 @@ mv pomo /usr/local/bin/pomo   # or any directory on your $PATH
 
 ## Usage
 
-Start a session with defaults (25 min focus, 5 min break):
+🍅 Start a session with defaults (25 min focus, 5 min break):
 
 ```bash
 pomo start
 ```
 
-Custom durations:
+⏰ Custom durations:
 
 ```bash
 pomo start --focus 45 --break 10
 ```
 
-Block websites during focus time:
+🚫 Block websites during focus time:
 
 ```bash
 sudo pomo start --block youtube.com,twitter.com,reddit.com
@@ -41,7 +41,7 @@ sudo pomo start --block youtube.com,twitter.com,reddit.com
 
 > **Note:** Website blocking requires `sudo` because it modifies `/etc/hosts`.
 
-Play ambient sound during focus time:
+🎵 Play ambient sound during focus time:
 
 ```bash
 pomo start --sound fire
