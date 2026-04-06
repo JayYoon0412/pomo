@@ -41,6 +41,19 @@ sudo pomo start --block youtube.com,twitter.com,reddit.com
 
 > **Note:** Website blocking requires `sudo` because it modifies `/etc/hosts`.
 
+Play ambient sound during focus time:
+
+```bash
+pomo start --sound fire
+pomo start --sound rain
+```
+
+Combine flags freely:
+
+```bash
+pomo start --focus 45 --break 10 --sound rain --block twitter.com
+```
+
 ### Flags
 
 | Flag      | Default | Description                                         |
@@ -48,6 +61,7 @@ sudo pomo start --block youtube.com,twitter.com,reddit.com
 | `--focus` | `25`    | Focus duration in minutes                           |
 | `--break` | `5`     | Break duration in minutes                           |
 | `--block` | —       | Comma-separated list of sites to block during focus |
+| `--sound` | —       | Ambient sound to loop during focus (`fire`, `rain`) |
 
 ## How website blocking works
 
@@ -71,3 +85,14 @@ Every line outside these markers is left completely untouched. Removal works by 
 **Leftover blocks from a crash are cleaned up on the next run.** If pomo is killed before it can clean up (e.g. power loss), the markers remain in the file. The next time you run `pomo start`, it detects and removes any leftover pomo block before writing a new one — so the file never accumulates stale entries.
 
 To manually remove pomo's entries at any time, delete the lines between and including the `# pomo-block-start` and `# pomo-block-end` markers.
+
+## Ambient sounds
+
+The `--sound` flag plays a looping audio track for the duration of your focus session. Sound stops automatically when the focus phase ends and is cleaned up immediately on `Ctrl+C`.
+
+| Name   | Description       |
+| ------ | ----------------- |
+| `fire` | Crackling fireplace |
+| `rain` | Lo-fi rain        |
+
+Sounds are embedded directly in the binary — no extra files needed after installation.
