@@ -7,7 +7,7 @@ Start structured work sessions, block distractions, and stay locked in — right
 ### Using `go install`
 
 ```bash
-go install github.com/JayYoon0412/pomo@latest
+go install github.com/JayYoon0412/pomo@v0.1.4
 ```
 > Make sure your Go binary directory is in your $PATH
 
