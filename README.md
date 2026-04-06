@@ -1,6 +1,6 @@
-# pomo
+# pomo — Lock In From Your Terminal
 
-A Pomodoro-based focus tool for the terminal.
+Start structured work sessions, block distractions, and stay locked in — right from your CLI. No fluff, no fancy UI stuff.
 
 ## Installation
 
@@ -43,11 +43,11 @@ sudo pomo start --block youtube.com,twitter.com,reddit.com
 
 ### Flags
 
-| Flag | Default | Description |
-|------|---------|-------------|
-| `--focus` | `25` | Focus duration in minutes |
-| `--break` | `5` | Break duration in minutes |
-| `--block` | — | Comma-separated list of sites to block during focus |
+| Flag      | Default | Description                                         |
+| --------- | ------- | --------------------------------------------------- |
+| `--focus` | `25`    | Focus duration in minutes                           |
+| `--break` | `5`     | Break duration in minutes                           |
+| `--block` | —       | Comma-separated list of sites to block during focus |
 
 ## How website blocking works
 
