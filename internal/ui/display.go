@@ -37,8 +37,8 @@ func NewDisplay() *Display {
 }
 
 // Render draws (or redraws) the timer display in place.
-func (d *Display) Render(phase Phase, remaining, total time.Duration, blocked []string) {
-	lines := d.buildLines(phase, remaining, total, blocked)
+func (d *Display) Render(phase Phase, remaining, total time.Duration, blocked []string, sound string) {
+	lines := d.buildLines(phase, remaining, total, blocked, sound)
 
 	// Move cursor back to the top of the previous render
 	if d.prevLines > 0 {
@@ -59,16 +59,16 @@ func (d *Display) PrintMessage(msg string) {
 	fmt.Println(msg)
 }
 
-func (d *Display) buildLines(phase Phase, remaining, total time.Duration, blocked []string) []string {
+func (d *Display) buildLines(phase Phase, remaining, total time.Duration, blocked []string, sound string) []string {
 	var lines []string
 
 	lines = append(lines, "") // top padding
 
 	// Phase header
 	if phase == PhaseFocus {
-		lines = append(lines, fmt.Sprintf("  %s%s● FOCUS%s", ansiBold, ansiCyan, ansiReset))
+		lines = append(lines, fmt.Sprintf("  %s%s● 🍅 FOCUS%s", ansiBold, ansiCyan, ansiReset))
 	} else {
-		lines = append(lines, fmt.Sprintf("  %s%s○ BREAK%s", ansiBold, ansiGreen, ansiReset))
+		lines = append(lines, fmt.Sprintf("  %s%s○ ☕️ BREAK%s", ansiBold, ansiGreen, ansiReset))
 	}
 
 	// Countdown
@@ -89,6 +89,11 @@ func (d *Display) buildLines(phase Phase, remaining, total time.Duration, blocke
 	if len(blocked) > 0 && phase == PhaseFocus {
 		lines = append(lines, "")
 		lines = append(lines, fmt.Sprintf("  %sblocking:%s %s", ansiDim, ansiReset, strings.Join(blocked, "  ")))
+	}
+
+	// Ambient sound (only shown during focus)
+	if sound != "" && phase == PhaseFocus {
+		lines = append(lines, fmt.Sprintf("  %s🎵 %s%s", ansiDim, sound, ansiReset))
 	}
 
 	lines = append(lines, "") // bottom padding

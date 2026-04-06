@@ -18,6 +18,7 @@ type Config struct {
 	BreakMins  int
 	BlockSites []string
 	SoundPath  string
+	SoundName  string
 }
 
 // Run executes a full Pomodoro session: focus phase followed by break phase.
@@ -60,7 +61,7 @@ func Run(cfg Config) error {
 	disp := ui.NewDisplay()
 	focusDur := time.Duration(cfg.FocusMins) * time.Minute
 
-	if interrupted := runPhase(disp, ui.PhaseFocus, focusDur, cfg.BlockSites, sigCh, cleanup); interrupted {
+	if interrupted := runPhase(disp, ui.PhaseFocus, focusDur, cfg.BlockSites, cfg.SoundName, sigCh, cleanup); interrupted {
 		return nil
 	}
 
@@ -71,7 +72,7 @@ func Run(cfg Config) error {
 
 	breakDur := time.Duration(cfg.BreakMins) * time.Minute
 
-	if interrupted := runPhase(disp, ui.PhaseBreak, breakDur, nil, sigCh, func() {}); interrupted {
+	if interrupted := runPhase(disp, ui.PhaseBreak, breakDur, nil, "", sigCh, func() {}); interrupted {
 		return nil
 	}
 
@@ -86,6 +87,7 @@ func runPhase(
 	phase ui.Phase,
 	total time.Duration,
 	blocked []string,
+	sound string,
 	sigCh chan os.Signal,
 	cleanup func(),
 ) bool {
@@ -93,7 +95,7 @@ func runPhase(
 	defer ticker.Stop()
 
 	start := time.Now()
-	disp.Render(phase, total, total, blocked)
+	disp.Render(phase, total, total, blocked, sound)
 
 	for {
 		select {
@@ -106,10 +108,10 @@ func runPhase(
 			elapsed := time.Since(start)
 			remaining := total - elapsed
 			if remaining <= 0 {
-				disp.Render(phase, 0, total, blocked)
+				disp.Render(phase, 0, total, blocked, sound)
 				return false
 			}
-			disp.Render(phase, remaining, total, blocked)
+			disp.Render(phase, remaining, total, blocked, sound)
 		}
 	}
 }

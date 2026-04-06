@@ -52,6 +52,7 @@ func runStart(cmd *cobra.Command, args []string) error {
 		BreakMins:  breakMins,
 		BlockSites: blockSites,
 		SoundPath:  soundPath,
+		SoundName:  soundName,
 	}
 
 	if err := session.Run(cfg); err != nil {
