@@ -9,6 +9,12 @@ Start structured work sessions, block distractions, and stay locked in — right
 ```bash
 go install github.com/JayYoon0412/pomo@latest
 ```
+> Make sure your Go binary directory is in your $PATH
+
+```bash
+export PATH="$PATH:$(go env GOPATH)/bin"
+source ~/.zshrc # or source ~/.bashrc
+```
 
 ### Manual build
 
